@@ -63,6 +63,23 @@ public class MySQLEventsSourceDAO implements EventsSourceDAO {
 		session.close();
 		return urls;
 	}
+	
+	public int updateFrequency(String sourceURL, int newFrequency){
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		List<EventsSource> all = getAllEventsSources();
+		int returnValue = 0;
+		for (EventsSource eventsSource : all) {
+			if(eventsSource.getSourceURL().equals(sourceURL)){
+				eventsSource.setDownloadFrequencyInHours(newFrequency);
+				session.update(eventsSource);
+				tr.commit();
+				returnValue = 1;
+			}
+		}
+		session.close();
+		return returnValue;
+	}
 
 	/**
 	 * Deletes an events source from DB by URL
@@ -84,7 +101,6 @@ public class MySQLEventsSourceDAO implements EventsSourceDAO {
 		}
 		tr.commit();
 		session.close();
-
 	}
 
 }

@@ -34,11 +34,9 @@ public class MySQLAdminDAO implements AdminDAO {
 	 *            the admin you want to delete
 	 * @return 1 if the admin was found and deleted, else return 0
 	 */
-	@SuppressWarnings("unchecked")
 	public int delete(Admin admin) {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
-		List<Admin> admins = session.createQuery("from eventagent.persistence.entities.Admin").list();
 		int returnValue = 0;
 		Admin adminFromDB = get(admin);
 		if (adminFromDB != null) {
