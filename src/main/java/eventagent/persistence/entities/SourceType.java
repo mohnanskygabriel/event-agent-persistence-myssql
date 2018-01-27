@@ -1,5 +1,5 @@
 package eventagent.persistence.entities;
 
-enum SourceType {
+public enum SourceType {
 	PAGE, GROUP, USER
 }

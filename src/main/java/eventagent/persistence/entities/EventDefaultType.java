@@ -1,5 +1,5 @@
 package eventagent.persistence.entities;
 
-enum EventDefaultType {
+public enum EventDefaultType {
 	MOVIE, CONCERT, UNSPECIFIED
 }
