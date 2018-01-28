@@ -12,6 +12,6 @@ public interface AdminDAO {
 
 	public Admin get(Admin admin);
 
-	public List<Admin> getAll();
+	public List<Admin> getAllAdmins();
 
 }

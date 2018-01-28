@@ -20,7 +20,7 @@ public class Admin {
 	private Long id;
 
 	@Column(name = "admin", columnDefinition = "nvarchar(50) NOT NULL", unique = true)
-	private String admin;
+	private String adminFbId;
 
 	public Long getId() {
 		return id;
@@ -30,19 +30,19 @@ public class Admin {
 		this.id = id;
 	}
 
-	public String getAdmin() {
-		return admin;
+	public String getAdminFbId() {
+		return adminFbId;
 	}
 
-	public void setAdminL(String admin) {
-		this.admin = admin;
+	public void setAdminFbId(String adminFbId) {
+		this.adminFbId = adminFbId;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((admin == null) ? 0 : admin.hashCode());
+		result = prime * result + ((adminFbId == null) ? 0 : adminFbId.hashCode());
 		return result;
 	}
 
@@ -55,10 +55,10 @@ public class Admin {
 		if (getClass() != obj.getClass())
 			return false;
 		Admin other = (Admin) obj;
-		if (admin == null) {
-			if (other.admin != null)
+		if (adminFbId == null) {
+			if (other.adminFbId != null)
 				return false;
-		} else if (!admin.equals(other.admin))
+		} else if (!adminFbId.equals(other.adminFbId))
 			return false;
 		return true;
 	}

@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Entity bean with JPA annotations, Hibernate provides JPA implementation
@@ -26,33 +28,31 @@ public class EventsSource {
 	@Column(name = "url", columnDefinition = "varchar(100) NOT NULL")
 	private String sourceURL;
 
-	@Column(name = "event_default_type", columnDefinition = "enum('PAGE','GROUP','USER') NOT NULL")
+	@Column(name = "event_default_type", columnDefinition = "enum('movie','concert','unspecified') DEFAULT 'unspecified'")
 	@Enumerated(EnumType.STRING)
-	private EventDefaultType eventDefaultType;
+	private EventDefaultType eventDefaultType = EventDefaultType.unspecified;
 
-	@Column(name = "last_check_result", columnDefinition = "enum('not_checked','new_event_found','none_new_event_found','unavailable') NOT NULL")
+	@Column(name = "last_check_result", columnDefinition = "enum('not_checked','new_event_found','none_new_event_found','unavailable') DEFAULT 'not_checked'")
 	@Enumerated(EnumType.STRING)
-	private LastCheckResult lastCheckResult;
+	private LastCheckResult lastCheckResult = LastCheckResult.not_checked;
 
-	@Column(name = "last_check_time", columnDefinition = "datetime")
-	private Date lastCheckTime;
+	@Column(name = "last_check_time", columnDefinition = "datetime NOT NULL DEFAULT '1000-01-01 00:00:00'")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastCheckTime = new Date();
 
-	@Column(name = "next_check_time", columnDefinition = "datetime")
-	private Date nextCheckTime;
+	@Column(name = "next_check_time", columnDefinition = "datetime NOT NULL DEFAULT '1000-01-01 00:00:00'")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date nextCheckTime = new Date();
 
-	@Column(name = "download_frequency_in_hours", columnDefinition = "int(5) NOT NULL DEFAULT '0'")
-	private Integer downloadFrequencyInHours;
+	@Column(name = "download_frequency_in_hours", columnDefinition = "int(5)  NOT NULL DEFAULT '0'")
+	private Integer downloadFrequencyInHours = 0;
 
 	@Column(name = "added", columnDefinition = "timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP")
 	private Date added;
 
-	@Column(name = "source_type", columnDefinition = "enum('PAGE','GROUP','USER') NOT NULL")
+	@Column(name = "source_type", columnDefinition = "enum('page','group','user') NOT NULL")
 	@Enumerated(EnumType.STRING)
 	private SourceType sourceType;
-
-	private EventsSource() {
-
-	}
 
 	public Long getId() {
 		return id;
@@ -149,6 +149,6 @@ public class EventsSource {
 		} else if (!sourceURL.equals(other.sourceURL))
 			return false;
 		return true;
-	}	
+	}
 
 }

@@ -5,12 +5,11 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
 import eventagent.persistence.dao.AdminDAO;
 import eventagent.persistence.entities.Admin;
 
 public class MySQLAdminDAO implements AdminDAO {
-	
+
 	private SessionFactory sessionFactory;
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
@@ -18,6 +17,8 @@ public class MySQLAdminDAO implements AdminDAO {
 	}
 
 	/**
+	 * Adds new admin
+	 * 
 	 * @param admin
 	 *            the new admin
 	 */
@@ -30,19 +31,17 @@ public class MySQLAdminDAO implements AdminDAO {
 	}
 
 	/**
+	 * Deletes an admin
+	 * 
 	 * @param admin
 	 *            the admin you want to delete
-	 * @return 1 if the admin was found and deleted, else return 0
+	 * @return 1 if the admin was found, else returns 0
 	 */
 	public int delete(Admin admin) {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		int returnValue = 0;
-		Admin adminFromDB = get(admin);
-		if (adminFromDB != null) {
-			session.delete(adminFromDB);
-			returnValue = 1;
-		}
+		session.remove(admin);
 		tx.commit();
 		session.close();
 		return returnValue;
@@ -53,17 +52,19 @@ public class MySQLAdminDAO implements AdminDAO {
 	 *            searched administrator
 	 * @return null if admin is not found in DB
 	 */
+	@SuppressWarnings("unchecked")
 	public Admin get(Admin admin) {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
-		List<Admin> admins = getAll();
+		List<Admin> admins = session.createQuery("from eventagent.persistence.entities.Admin").list();
 		Admin foundAdmin = null;
 		for (Admin adminFromDB : admins) {
-			if (adminFromDB == admin) {
+			if (adminFromDB.equals(admin)) {
 				foundAdmin = adminFromDB;
 				break;
 			}
 		}
+
 		tx.commit();
 		session.close();
 		return foundAdmin;
@@ -73,7 +74,7 @@ public class MySQLAdminDAO implements AdminDAO {
 	 * @return List of Admins from DB
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Admin> getAll() {
+	public List<Admin> getAllAdmins() {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		List<Admin> admins = session.createQuery("from eventagent.persistence.entities.Admin").list();
