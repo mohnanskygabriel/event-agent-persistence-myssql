@@ -5,10 +5,6 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import eventagent.persistence.dao.EventsSourceDAO;
 import eventagent.persistence.entities.EventsSource;
 
@@ -130,5 +126,4 @@ public class MySQLEventsSourceDAO implements EventsSourceDAO {
 		session.close();
 		return returnValue;
 	}
-
 }
