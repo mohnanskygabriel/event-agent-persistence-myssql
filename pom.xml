@@ -4,7 +4,7 @@
 
 	<groupId>sk.upjs.ics</groupId>
 	<artifactId>event-agent-persistence-myssql</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>MySQL persistence layer</name>
 	<properties>
 		<java.version>1.8</java.version>
