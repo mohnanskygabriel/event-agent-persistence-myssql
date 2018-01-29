@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class Admin {
 
 	@Id
-	@Column(name = "id", columnDefinition = "int(6) NOT NULL AUTO_INCREMENT", insertable = false, updatable = false)
+	@Column(name = "id", columnDefinition = "int(6) NOT NULL AUTO_INCREMENT")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
