@@ -101,6 +101,29 @@ public class MySQLEventsSourceDAO implements EventsSourceDAO {
 	}
 
 	/**
+	 * Updates an EventsSource, the methods checks the @param eventsSource url
+	 * an set all attributes in the DB as the attributes of @param eventsSource
+	 * 
+	 * @param eventsSource
+	 *            the eventSource you want to update with modified attributes
+	 * 
+	 * @return 0 if EventsSource is not found otherwise returns 1
+	 */
+	@Override
+	public int update(EventsSource eventsSource) {
+		Session session = sessionFactory.openSession();
+		Transaction tr = session.beginTransaction();
+		if (eventsSource != null && get(eventsSource) != null) {
+			session.update(eventsSource);
+			tr.commit();
+			session.close();
+			return 1;
+		}
+		session.close();
+		return 0;
+	}
+
+	/**
 	 * Deletes an EventsSource by URL
 	 * 
 	 * @param sourceURL

@@ -13,6 +13,8 @@ public interface EventsSourceDAO {
 	public List<EventsSource> getAllEventsSources();
 
 	public int updateFrequency(String sourceURL, int newFrequency);
+	
+	public int update(EventsSource eventsSource);
 
 	public int deleteEventsSource(EventsSource eventsSource);
 }

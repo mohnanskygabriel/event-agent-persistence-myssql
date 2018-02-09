@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +46,20 @@ public class MySQLEventsSourceDAOTest {
 		getDao().deleteEventsSource(getTestEventsSource());
 		assertSame(allEventsSourcesCountBefore, getDao().getAllEventsSources().size());
 
+	}
+
+	@Test
+	public void testUpdate() {
+		getDao().addNewEventsSource(getTestEventsSource());
+		int frequencyBeforeUpdate = getDao().get(getTestEventsSource()).getDownloadFrequencyInHours();
+		EventsSource modifiedES = getDao().get(getTestEventsSource());
+		
+		modifiedES.setDownloadFrequencyInHours(frequencyBeforeUpdate + 1);
+
+		getDao().update(modifiedES);
+
+		assertSame(getDao().get(modifiedES).getDownloadFrequencyInHours(), frequencyBeforeUpdate + 1);
+		getDao().deleteEventsSource(modifiedES);
 	}
 
 	@Test
