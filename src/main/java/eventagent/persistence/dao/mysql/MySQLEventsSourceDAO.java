@@ -23,11 +23,19 @@ public class MySQLEventsSourceDAO implements EventsSourceDAO {
 	 *            the EventsSource object
 	 */
 	public void addNewEventsSource(EventsSource eventsSource) {
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
-		session.persist(eventsSource);
-		tx.commit();
-		session.close();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			Transaction tx = session.beginTransaction();
+			session.persist(eventsSource);
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen())
+				session.close();
+		}
+
 	}
 
 	/**
@@ -41,18 +49,25 @@ public class MySQLEventsSourceDAO implements EventsSourceDAO {
 	@SuppressWarnings("unchecked")
 	public EventsSource get(EventsSource eventsSource) {
 		EventsSource foundEventsSource = null;
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
-		List<EventsSource> eventsSources = session.createQuery("from eventagent.persistence.entities.EventsSource")
-				.list();
-		for (EventsSource eventsSourceFromDb : eventsSources) {
-			if (eventsSourceFromDb.equals(eventsSource)) {
-				foundEventsSource = eventsSourceFromDb;
-				break;
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			Transaction tx = session.beginTransaction();
+			List<EventsSource> eventsSources = session.createQuery("from eventagent.persistence.entities.EventsSource")
+					.list();
+			for (EventsSource eventsSourceFromDb : eventsSources) {
+				if (eventsSourceFromDb.equals(eventsSource)) {
+					foundEventsSource = eventsSourceFromDb;
+					break;
+				}
 			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen())
+				session.close();
 		}
-		tx.commit();
-		session.close();
 		return foundEventsSource;
 	}
 
@@ -63,12 +78,20 @@ public class MySQLEventsSourceDAO implements EventsSourceDAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<EventsSource> getAllEventsSources() {
-		Session session = sessionFactory.openSession();
-		Transaction tr = session.beginTransaction();
-		List<EventsSource> eventsSources = session.createQuery("from eventagent.persistence.entities.EventsSource")
-				.list();
-		tr.commit();
-		session.close();
+		Session session = null;
+		List<EventsSource> eventsSources = null;
+		try {
+			session = sessionFactory.openSession();
+			Transaction tr = session.beginTransaction();
+			eventsSources = session.createQuery("from eventagent.persistence.entities.EventsSource").list();
+			tr.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen())
+				session.close();
+		}
+
 		return eventsSources;
 
 	}
@@ -84,20 +107,28 @@ public class MySQLEventsSourceDAO implements EventsSourceDAO {
 	 * @return 0 if EventsSource with sourceURL is not found otherwise returns 1
 	 */
 	public int updateFrequency(String sourceURL, int newFrequency) {
-		Session session = sessionFactory.openSession();
-		Transaction tr = session.beginTransaction();
-		List<EventsSource> all = getAllEventsSources();
+		Session session = null;
 		int returnValue = 0;
-		for (EventsSource eventsSource : all) {
-			if (eventsSource.getSourceURL().equals(sourceURL)) {
-				eventsSource.setDownloadFrequencyInHours(newFrequency);
-				session.update(eventsSource);
-				tr.commit();
-				returnValue = 1;
+		try {
+			session = sessionFactory.openSession();
+			Transaction tr = session.beginTransaction();
+			List<EventsSource> all = getAllEventsSources();
+			for (EventsSource eventsSource : all) {
+				if (eventsSource.getSourceURL().equals(sourceURL)) {
+					eventsSource.setDownloadFrequencyInHours(newFrequency);
+					session.update(eventsSource);
+					tr.commit();
+					returnValue = 1;
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen())
+				session.close();
 		}
-		session.close();
 		return returnValue;
+
 	}
 
 	/**
@@ -111,15 +142,22 @@ public class MySQLEventsSourceDAO implements EventsSourceDAO {
 	 */
 	@Override
 	public int update(EventsSource eventsSource) {
-		Session session = sessionFactory.openSession();
-		Transaction tr = session.beginTransaction();
-		if (eventsSource != null && get(eventsSource) != null) {
-			session.update(eventsSource);
-			tr.commit();
-			session.close();
-			return 1;
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			Transaction tr = session.beginTransaction();
+			if (eventsSource != null && get(eventsSource) != null) {
+				session.update(eventsSource);
+				tr.commit();
+				session.close();
+				return 1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen())
+				session.close();
 		}
-		session.close();
 		return 0;
 	}
 
@@ -134,19 +172,26 @@ public class MySQLEventsSourceDAO implements EventsSourceDAO {
 	@SuppressWarnings("unchecked")
 	public int deleteEventsSource(EventsSource eventsSource) {
 		int returnValue = 0;
-		Session session = sessionFactory.openSession();
-		Transaction tr = session.beginTransaction();
-		List<EventsSource> eventsSources = session.createQuery("from eventagent.persistence.entities.EventsSource")
-				.list();
-		for (EventsSource eventsSourceFromDB : eventsSources) {
-			if (eventsSourceFromDB.equals(eventsSource)) {
-				session.delete(eventsSourceFromDB);
-				returnValue = 1;
-				break;
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			Transaction tr = session.beginTransaction();
+			List<EventsSource> eventsSources = session.createQuery("from eventagent.persistence.entities.EventsSource")
+					.list();
+			for (EventsSource eventsSourceFromDB : eventsSources) {
+				if (eventsSourceFromDB.equals(eventsSource)) {
+					session.delete(eventsSourceFromDB);
+					returnValue = 1;
+					break;
+				}
 			}
+			tr.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen())
+				session.close();
 		}
-		tr.commit();
-		session.close();
 		return returnValue;
 	}
 }

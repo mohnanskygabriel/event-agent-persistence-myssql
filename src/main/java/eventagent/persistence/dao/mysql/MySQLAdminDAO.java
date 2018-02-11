@@ -23,11 +23,18 @@ public class MySQLAdminDAO implements AdminDAO {
 	 *            the new admin
 	 */
 	public void addNewAdmin(Admin admin) {
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
-		session.persist(admin);
-		tx.commit();
-		session.close();
+		Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			Transaction tx = session.beginTransaction();
+			session.persist(admin);
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen())
+				session.close();
+		}
 	}
 
 	/**
@@ -38,12 +45,19 @@ public class MySQLAdminDAO implements AdminDAO {
 	 * @return 1 if the admin was found, else returns 0
 	 */
 	public int delete(Admin admin) {
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
+		Session session = null;
 		int returnValue = 0;
-		session.remove(admin);
-		tx.commit();
-		session.close();
+		try {
+			session = sessionFactory.openSession();
+			Transaction tx = session.beginTransaction();
+			session.remove(admin);
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen())
+				session.close();
+		}
 		return returnValue;
 	}
 
@@ -54,19 +68,25 @@ public class MySQLAdminDAO implements AdminDAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public Admin get(Admin admin) {
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
-		List<Admin> admins = session.createQuery("from eventagent.persistence.entities.Admin").list();
+		Session session = null;
 		Admin foundAdmin = null;
-		for (Admin adminFromDB : admins) {
-			if (adminFromDB.equals(admin)) {
-				foundAdmin = adminFromDB;
-				break;
+		try {
+			session = sessionFactory.openSession();
+			Transaction tx = session.beginTransaction();
+			List<Admin> admins = session.createQuery("from eventagent.persistence.entities.Admin").list();
+			for (Admin adminFromDB : admins) {
+				if (adminFromDB.equals(admin)) {
+					foundAdmin = adminFromDB;
+					break;
+				}
 			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen())
+				session.close();
 		}
-
-		tx.commit();
-		session.close();
 		return foundAdmin;
 	}
 
@@ -75,11 +95,19 @@ public class MySQLAdminDAO implements AdminDAO {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Admin> getAllAdmins() {
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
-		List<Admin> admins = session.createQuery("from eventagent.persistence.entities.Admin").list();
-		tx.commit();
-		session.close();
+		Session session = null;
+		List<Admin> admins = null;
+		try {
+			session = sessionFactory.openSession();
+			Transaction tx = session.beginTransaction();
+			admins = session.createQuery("from eventagent.persistence.entities.Admin").list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen())
+				session.close();
+		}
 		return admins;
 	}
 
